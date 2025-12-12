@@ -1,11 +1,77 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>My Site</title>
-  </head>
-  <body>
-    <h1>Hello — this is my website!</h1>
-    <p>I built this myself using GitHub Pages.</p>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday!</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    }
+
+    h1 {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 4em;
+      color: #fff;
+      text-shadow: 2px 2px 10px #ff69b4;
+      z-index: 100;
+      text-align: center;
+    }
+
+    .shape {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(45deg, #ffd700, #ff4500);
+      border-radius: 50%;
+      animation: float 5s infinite ease-in-out;
+      transform-style: preserve-3d;
+    }
+
+    @keyframes float {
+      0% { transform: translate3d(0,0,0) rotateX(0) rotateY(0); }
+      25% { transform: translate3d(50px,-100px,50px) rotateX(180deg) rotateY(90deg); }
+      50% { transform: translate3d(-50px,-200px,-50px) rotateX(360deg) rotateY(180deg); }
+      75% { transform: translate3d(100px,-100px,50px) rotateX(540deg) rotateY(270deg); }
+      100% { transform: translate3d(0,0,0) rotateX(720deg) rotateY(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <h1>🎉 Happy Birthday! 🎉</h1>
+
+  <script>
+    // Generate multiple fun shapes
+    const numShapes = 30;
+    for (let i = 0; i < numShapes; i++) {
+      const shape = document.createElement('div');
+      shape.classList.add('shape');
+      shape.style.left = Math.random() * window.innerWidth + 'px';
+      shape.style.top = Math.random() * window.innerHeight + 'px';
+      shape.style.width = shape.style.height = (20 + Math.random() * 60) + 'px';
+      shape.style.background = `hsl(${Math.random()*360}, 70%, 60%)`;
+      shape.style.animationDuration = (3 + Math.random() * 5) + 's';
+      document.body.appendChild(shape);
+    }
+
+    // Make shapes move continuously across the screen
+    const shapes = document.querySelectorAll('.shape');
+    function animateShapes() {
+      shapes.forEach(shape => {
+        const x = parseFloat(shape.style.left);
+        const y = parseFloat(shape.style.top);
+        shape.style.left = (x + Math.random() * 4 - 2) + 'px';
+        shape.style.top = (y + Math.random() * 4 - 2) + 'px';
+      });
+      requestAnimationFrame(animateShapes);
+    }
+    animateShapes();
+  </script>
+</body>
 </html>
