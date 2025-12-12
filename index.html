@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Happy Birthday!</title>
+  <title>Happy Birthday Laine!</title>
   <style>
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
       overflow: hidden;
+      height: 100%;
       font-family: 'Comic Sans MS', cursive, sans-serif;
-      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4, #a18cd1);
     }
 
     h1 {
@@ -17,61 +19,62 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 4em;
       color: #fff;
-      text-shadow: 2px 2px 10px #ff69b4;
-      z-index: 100;
+      font-size: 5em;
       text-align: center;
+      text-shadow: 2px 2px 15px #ff69b4, 0 0 25px #ffdf00;
+      z-index: 10;
+      animation: pop 1s ease-out forwards;
     }
 
-    .shape {
+    @keyframes pop {
+      0% { transform: translate(-50%, -50%) scale(0); }
+      100% { transform: translate(-50%, -50%) scale(1); }
+    }
+
+    .particle {
       position: absolute;
-      width: 50px;
-      height: 50px;
-      background: linear-gradient(45deg, #ffd700, #ff4500);
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
-      animation: float 5s infinite ease-in-out;
-      transform-style: preserve-3d;
+      background: hsl(0, 100%, 50%);
+      pointer-events: none;
+      animation: float 6s linear infinite;
     }
 
     @keyframes float {
-      0% { transform: translate3d(0,0,0) rotateX(0) rotateY(0); }
-      25% { transform: translate3d(50px,-100px,50px) rotateX(180deg) rotateY(90deg); }
-      50% { transform: translate3d(-50px,-200px,-50px) rotateX(360deg) rotateY(180deg); }
-      75% { transform: translate3d(100px,-100px,50px) rotateX(540deg) rotateY(270deg); }
-      100% { transform: translate3d(0,0,0) rotateX(720deg) rotateY(360deg); }
+      0% { transform: translate3d(0,0,0) rotate(0deg); }
+      100% { transform: translate3d(calc(100vw - 40px), -100vh, 50px) rotate(720deg); }
     }
   </style>
 </head>
 <body>
-  <h1>🎉 Happy Birthday! 🎉</h1>
+  <h1>🎉 Happy Birthday Laine! 🎉</h1>
 
   <script>
-    // Generate multiple fun shapes
-    const numShapes = 30;
-    for (let i = 0; i < numShapes; i++) {
-      const shape = document.createElement('div');
-      shape.classList.add('shape');
-      shape.style.left = Math.random() * window.innerWidth + 'px';
-      shape.style.top = Math.random() * window.innerHeight + 'px';
-      shape.style.width = shape.style.height = (20 + Math.random() * 60) + 'px';
-      shape.style.background = `hsl(${Math.random()*360}, 70%, 60%)`;
-      shape.style.animationDuration = (3 + Math.random() * 5) + 's';
-      document.body.appendChild(shape);
+    const colors = ['#ff4b5c', '#56cfe1', '#ff9f1c', '#8ac926', '#1982c4'];
+    const numParticles = 50;
+
+    for (let i = 0; i < numParticles; i++) {
+      const p = document.createElement('div');
+      p.classList.add('particle');
+      p.style.background = colors[Math.floor(Math.random() * colors.length)];
+      p.style.width = p.style.height = 10 + Math.random() * 30 + 'px';
+      p.style.left = Math.random() * window.innerWidth + 'px';
+      p.style.top = window.innerHeight + Math.random() * 100 + 'px';
+      p.style.animationDuration = 4 + Math.random() * 6 + 's';
+      p.style.opacity = 0.5 + Math.random() * 0.5;
+      document.body.appendChild(p);
     }
 
-    // Make shapes move continuously across the screen
-    const shapes = document.querySelectorAll('.shape');
-    function animateShapes() {
-      shapes.forEach(shape => {
-        const x = parseFloat(shape.style.left);
-        const y = parseFloat(shape.style.top);
-        shape.style.left = (x + Math.random() * 4 - 2) + 'px';
-        shape.style.top = (y + Math.random() * 4 - 2) + 'px';
+    // Optional: make particles follow the mouse
+    document.addEventListener('mousemove', e => {
+      const x = e.clientX;
+      const y = e.clientY;
+      document.querySelectorAll('.particle').forEach(p => {
+        p.style.transform = `translate3d(${x/30}px, ${y/30}px, 0) rotate(${Math.random()*360}deg)`;
       });
-      requestAnimationFrame(animateShapes);
-    }
-    animateShapes();
+    });
   </script>
 </body>
 </html>
