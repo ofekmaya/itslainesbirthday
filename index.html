@@ -3,62 +3,129 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Laine Birthday Animation</title>
+<title>Laine Birthday Pills</title>
 <style>
-html,body{margin:0;padding:0;overflow:hidden;height:100%;background:#000;font-family:Arial;}
-canvas{display:block;}
+html,body {
+  margin:0; padding:0; overflow:hidden; height:100%;
+  font-family: Arial, sans-serif;
+  background:#000;
+}
+canvas {
+  display:block; position:absolute; top:0; left:0;
+}
 </style>
 </head>
 <body>
 <canvas id="canvas"></canvas>
-<script>
-const c=document.getElementById("canvas"),ctx=c.getContext("2d");
-c.width=window.innerWidth;c.height=window.innerHeight;
 
-// Simple pixel sunset
-function drawBG(){
-  const px=8;
-  for(let y=0;y<c.height;y+=px){
-    for(let x=0;x<c.width;x+=px){
-      let r=255-(y/c.height)*80+Math.random()*20;
-      let g=120+(y/c.height)*80+Math.random()*20;
-      let b=60+(y/c.height)*60+Math.random()*20;
-      ctx.fillStyle=`rgb(${r},${g},${b})`;
-      ctx.fillRect(x,y,px,px);
+<script>
+// Canvas setup
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// --- Pixelated sunset with clouds ---
+function drawSunset() {
+  const px = 6;
+  for (let y = 0; y < canvas.height; y += px) {
+    for (let x = 0; x < canvas.width; x += px) {
+      let r = Math.floor(100 + (y/canvas.height)*50 + Math.random()*20);
+      let g = Math.floor(0 + (y/canvas.height)*20);
+      let b = Math.floor(80 + (y/canvas.height)*100);
+      ctx.fillStyle = `rgb(${r},${g},${b})`;
+      ctx.fillRect(x, y, px, px);
+    }
+  }
+
+  // pixelated clouds
+  for(let i=0; i<20; i++){
+    const cloudX = Math.random()*canvas.width;
+    const cloudY = Math.random()*(canvas.height/2);
+    const w = 30 + Math.random()*100;
+    const h = 10 + Math.random()*30;
+    ctx.fillStyle = `rgba(200,200,200,0.3)`;
+    for(let cx=0; cx<w; cx+=6){
+      for(let cy=0; cy<h; cy+=6){
+        if(Math.random()>0.5) ctx.fillRect(cloudX+cx, cloudY+cy, 6, 6);
+      }
     }
   }
 }
 
-// Pill
-class Pill{constructor(){this.reset();}
-reset(){this.x=Math.random()*c.width;this.y=Math.random()*-c.height;this.w=10+Math.random()*20;this.h=this.w/3;this.color=`hsl(${Math.random()*360},30%,40%)`;this.speed=1+Math.random()*2;this.angle=Math.random()*Math.PI*2;this.angularSpeed=Math.random()*0.05-0.025;this.target=null;}
-update(){this.x+=Math.sin(this.y/100)*1.2;this.y+=this.speed;this.angle+=this.angularSpeed;if(this.target){this.x+=(this.target.x-this.x)*0.05;this.y+=(this.target.y-this.y)*0.05;}if(this.y>c.height+this.h)this.reset();}
-draw(){ctx.save();ctx.translate(this.x,this.y);ctx.rotate(this.angle);ctx.fillStyle=this.color;ctx.fillRect(-this.w/2,-this.h/2,this.w,this.h);ctx.restore();}}
-
-const pills=[];for(let i=0;i<200;i++)pills.push(new Pill());
-
-function createTextMap(text,size){
-  const off=document.createElement("canvas");
-  const offCtx=off.getContext("2d");
-  off.width=c.width; off.height=c.height;
-  offCtx.font=`${size}px Arial`; offCtx.fillStyle="white"; offCtx.textAlign="center"; offCtx.textBaseline="middle";
-  offCtx.fillText(text,c.width/2,c.height/2);
-  return offCtx.getImageData(0,0,off.width,off.height);
+// --- Pill class ---
+class Pill {
+  constructor() {
+    this.reset();
+  }
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * -canvas.height;
+    this.w = 12 + Math.random()*18;
+    this.h = this.w / 3;
+    this.color = `hsl(${Math.random()*360}, 50%, 50%)`;
+    this.speed = 1 + Math.random()*2;
+    this.angle = Math.random()*Math.PI*2;
+    this.angularSpeed = Math.random()*0.05 - 0.025;
+    this.target = null;
+  }
+  update() {
+    this.x += Math.sin(this.y/100)*1.2;
+    this.y += this.speed;
+    this.angle += this.angularSpeed;
+    if(this.target) {
+      this.x += (this.target.x - this.x)*0.05;
+      this.y += (this.target.y - this.y)*0.05;
+    }
+    if(this.y > canvas.height + this.h) this.reset();
+  }
+  draw() {
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.angle);
+    // 3D effect with gradient
+    const grad = ctx.createLinearGradient(-this.w/2,-this.h/2,this.w/2,this.h/2);
+    grad.addColorStop(0,'white');
+    grad.addColorStop(0.2,this.color);
+    grad.addColorStop(1,'#111');
+    ctx.fillStyle = grad;
+    ctx.fillRect(-this.w/2,-this.h/2,this.w,this.h);
+    ctx.restore();
+  }
 }
 
-let map1=createTextMap("Laine",140);
-let map2=createTextMap("It is your birthday. I love you.",80);
-let activeMap=map1;
+// --- Create pills ---
+const pills = [];
+for(let i=0;i<250;i++) pills.push(new Pill());
+
+// --- Text maps ---
+function createTextMap(text,fontSize){
+  const off = document.createElement('canvas');
+  const ctxOff = off.getContext('2d');
+  off.width = canvas.width; off.height = canvas.height;
+  ctxOff.font = `${fontSize}px Arial`;
+  ctxOff.fillStyle='white';
+  ctxOff.textAlign='center';
+  ctxOff.textBaseline='middle';
+  ctxOff.fillText(text,canvas.width/2,canvas.height/2);
+  return ctxOff.getImageData(0,0,off.width,off.height);
+}
+
+let map1 = createTextMap("Laine",140);
+let map2 = createTextMap("It is your birthday. I love you.",80);
+let activeMap = map1;
 setTimeout(()=>activeMap=map2,4000);
 
-function animate(){
-  drawBG();
-  pills.forEach(p=>{
+// --- Animation loop ---
+function animate() {
+  drawSunset();
+  pills.forEach(p => {
     if(Math.random()<0.04){
-      const tx=Math.floor(Math.random()*activeMap.width);
-      const ty=Math.floor(Math.random()*activeMap.height);
-      const idx=(ty*activeMap.width+tx)*4+3;
-      if(activeMap.data[idx]>128)p.target={x:tx,y:ty}; else p.target=null;
+      const tx = Math.floor(Math.random()*activeMap.width);
+      const ty = Math.floor(Math.random()*activeMap.height);
+      const idx = (ty*activeMap.width + tx)*4 + 3;
+      if(activeMap.data[idx]>128) p.target = {x:tx,y:ty};
+      else p.target=null;
     }
     p.update(); p.draw();
   });
@@ -66,7 +133,13 @@ function animate(){
 }
 animate();
 
-window.addEventListener("resize",()=>{c.width=window.innerWidth;c.height=window.innerHeight;map1=createTextMap("Laine",140);map2=createTextMap("It is your birthday. I love you.",80);});
+// --- Resize handler ---
+window.addEventListener('resize',()=>{
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  map1 = createTextMap("Laine",140);
+  map2 = createTextMap("It is your birthday. I love you.",80);
+});
 </script>
 </body>
 </html>
