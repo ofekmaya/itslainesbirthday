@@ -3,178 +3,70 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Birthday Animation for Laine</title>
+<title>Laine Birthday Animation</title>
 <style>
-html, body {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  height: 100%;
-  font-family: Arial, sans-serif;
-  background: #000;
-}
-canvas {
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-.collage-border {
-  position: absolute;
-  top:0; left:0;
-  width:100%; height:100%;
-  pointer-events:none;
-  z-index:5;
-}
-.collage-border img {
-  position:absolute;
-  object-fit:cover;
-  opacity:0.7;
-  border-radius:6px;
-  box-shadow:0 0 6px rgba(0,0,0,0.2);
-}
-h1 {
-  position:absolute;
-  top:8%;
-  left:50%;
-  transform:translateX(-50%);
-  color:#fff;
-  font-size:3em;
-  z-index:10;
-  text-align:center;
-}
+html,body{margin:0;padding:0;overflow:hidden;height:100%;background:#000;font-family:Arial;}
+canvas{display:block;}
 </style>
 </head>
 <body>
-<h1>Happy Birthday Laine</h1>
 <canvas id="canvas"></canvas>
-<div class="collage-border" id="collageBorder"></div>
-
 <script>
-// --- Canvas Setup ---
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+const c=document.getElementById("canvas"),ctx=c.getContext("2d");
+c.width=window.innerWidth;c.height=window.innerHeight;
 
-// --- Pixelated Sunset Background ---
-function drawPixelSunset() {
-  const px = 8;
-  for (let y = 0; y < canvas.height; y += px) {
-    for (let x = 0; x < canvas.width; x += px) {
-      let r = Math.floor(255 - (y / canvas.height) * 80 + Math.random() * 20);
-      let g = Math.floor(120 + (y / canvas.height) * 80 + Math.random() * 20);
-      let b = Math.floor(60 + (y / canvas.height) * 60 + Math.random() * 20);
-      ctx.fillStyle = `rgb(${r},${g},${b})`;
-      ctx.fillRect(x, y, px, px);
+// Simple pixel sunset
+function drawBG(){
+  const px=8;
+  for(let y=0;y<c.height;y+=px){
+    for(let x=0;x<c.width;x+=px){
+      let r=255-(y/c.height)*80+Math.random()*20;
+      let g=120+(y/c.height)*80+Math.random()*20;
+      let b=60+(y/c.height)*60+Math.random()*20;
+      ctx.fillStyle=`rgb(${r},${g},${b})`;
+      ctx.fillRect(x,y,px,px);
     }
   }
 }
 
-// --- Pill Class ---
-class Pill {
-  constructor() { this.reset(); }
-  reset() {
-    this.x = Math.random() * canvas.width;
-    this.y = Math.random() * -canvas.height;
-    this.w = 10 + Math.random()*20;
-    this.h = this.w / 3;
-    this.color = `hsl(${Math.random()*360},30%,40%)`;
-    this.speed = 1 + Math.random()*2;
-    this.angle = Math.random()*Math.PI*2;
-    this.angularSpeed = Math.random()*0.05 - 0.025;
-    this.target = null;
-  }
-  update() {
-    this.x += Math.sin(this.y/100)*1.2;
-    this.y += this.speed;
-    this.angle += this.angularSpeed;
-    if (this.target) {
-      this.x += (this.target.x - this.x) * 0.05;
-      this.y += (this.target.y - this.y) * 0.05;
-    }
-    if (this.y > canvas.height + this.h) this.reset();
-  }
-  draw() {
-    ctx.save();
-    ctx.translate(this.x, this.y);
-    ctx.rotate(this.angle);
-    ctx.fillStyle = this.color;
-    ctx.fillRect(-this.w/2, -this.h/2, this.w, this.h);
-    ctx.restore();
-  }
-}
+// Pill
+class Pill{constructor(){this.reset();}
+reset(){this.x=Math.random()*c.width;this.y=Math.random()*-c.height;this.w=10+Math.random()*20;this.h=this.w/3;this.color=`hsl(${Math.random()*360},30%,40%)`;this.speed=1+Math.random()*2;this.angle=Math.random()*Math.PI*2;this.angularSpeed=Math.random()*0.05-0.025;this.target=null;}
+update(){this.x+=Math.sin(this.y/100)*1.2;this.y+=this.speed;this.angle+=this.angularSpeed;if(this.target){this.x+=(this.target.x-this.x)*0.05;this.y+=(this.target.y-this.y)*0.05;}if(this.y>c.height+this.h)this.reset();}
+draw(){ctx.save();ctx.translate(this.x,this.y);ctx.rotate(this.angle);ctx.fillStyle=this.color;ctx.fillRect(-this.w/2,-this.h/2,this.w,this.h);ctx.restore();}}
 
-const pills = [];
-for (let i = 0; i < 250; i++) pills.push(new Pill());
+const pills=[];for(let i=0;i<200;i++)pills.push(new Pill());
 
-// --- Text Maps ---
-function createTextMap(text, fontSize) {
-  const off = document.createElement('canvas');
-  const offCtx = off.getContext('2d');
-  off.width = canvas.width;
-  off.height = canvas.height;
-  offCtx.font = `${fontSize}px Arial`;
-  offCtx.fillStyle = "white";
-  offCtx.textAlign = "center";
-  offCtx.textBaseline = "middle";
-  offCtx.fillText(text, canvas.width/2, canvas.height/2);
+function createTextMap(text,size){
+  const off=document.createElement("canvas");
+  const offCtx=off.getContext("2d");
+  off.width=c.width; off.height=c.height;
+  offCtx.font=`${size}px Arial`; offCtx.fillStyle="white"; offCtx.textAlign="center"; offCtx.textBaseline="middle";
+  offCtx.fillText(text,c.width/2,c.height/2);
   return offCtx.getImageData(0,0,off.width,off.height);
 }
 
-let map1 = createTextMap("Laine", 140);
-let map2 = createTextMap("It is your birthday. I love you.", 80);
-let activeMap = map1;
-setTimeout(() => activeMap = map2, 4000);
+let map1=createTextMap("Laine",140);
+let map2=createTextMap("It is your birthday. I love you.",80);
+let activeMap=map1;
+setTimeout(()=>activeMap=map2,4000);
 
-// --- Animation Loop ---
-function animate() {
-  drawPixelSunset();
-  pills.forEach(p => {
-    if (Math.random() < 0.04) {
-      const tx = Math.floor(Math.random() * activeMap.width);
-      const ty = Math.floor(Math.random() * activeMap.height);
-      const idx = (ty * activeMap.width + tx)*4+3;
-      if (activeMap.data[idx] > 128) p.target = {x:tx, y:ty};
-      else p.target = null;
+function animate(){
+  drawBG();
+  pills.forEach(p=>{
+    if(Math.random()<0.04){
+      const tx=Math.floor(Math.random()*activeMap.width);
+      const ty=Math.floor(Math.random()*activeMap.height);
+      const idx=(ty*activeMap.width+tx)*4+3;
+      if(activeMap.data[idx]>128)p.target={x:tx,y:ty}; else p.target=null;
     }
-    p.update();
-    p.draw();
+    p.update(); p.draw();
   });
   requestAnimationFrame(animate);
 }
 animate();
 
-// --- Collage Border (working people) ---
-const collage = document.getElementById("collageBorder");
-const photos = [
-  "https://cdn.pixabay.com/photo/2016/11/18/13/28/business-1839876_1280.jpg",
-  "https://cdn.pixabay.com/photo/2017/08/10/03/53/team-2617505_1280.jpg",
-  "https://cdn.pixabay.com/photo/2018/02/02/15/59/startup-3125712_1280.jpg",
-  "https://cdn.pixabay.com/photo/2015/03/26/10/03/business-690048_1280.jpg",
-  "https://cdn.pixabay.com/photo/2019/05/07/15/09/business-4184151_1280.jpg"
-];
-photos.forEach((src, i) => {
-  const img = document.createElement("img");
-  img.src = src;
-  img.style.width = "160px";
-  img.style.height = "110px";
-  const side = i % 4;
-  const off = 30 + Math.random()*120;
-  if (side===0) { img.style.top=`${off}px`; img.style.left=`${off}px`; }
-  if (side===1) { img.style.top=`${off+50}px`; img.style.right=`${off}px`; }
-  if (side===2) { img.style.bottom=`${off}px`; img.style.left=`${off+60}px`; }
-  if (side===3) { img.style.top=`${off+140}px`; img.style.left=`${off/2}px`; }
-  collage.appendChild(img);
-});
-
-// --- Resize Handler ---
-window.addEventListener('resize', () => {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  map1 = createTextMap("Laine", 140);
-  map2 = createTextMap("It is your birthday. I love you.", 80);
-});
+window.addEventListener("resize",()=>{c.width=window.innerWidth;c.height=window.innerHeight;map1=createTextMap("Laine",140);map2=createTextMap("It is your birthday. I love you.",80);});
 </script>
 </body>
 </html>
