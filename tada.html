@@ -10,33 +10,74 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             background: transparent;
             padding: 20px;
         }
-
         .gallery {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
             max-width: 1200px;
             margin: 0 auto;
+            position: relative;
         }
-
+        .message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Comic Sans MS', cursive;
+            font-size: 32px;
+            color: black;
+            text-align: center;
+            background: white;
+            padding: 30px 40px;
+            border: 4px dotted black;
+            border-radius: 10px;
+            z-index: 10;
+            animation: rotateBorder 2s linear infinite;
+        }
+        @keyframes rotateBorder {
+            0% {
+                border-style: dotted dotted dotted dotted;
+                border-color: black black transparent transparent;
+            }
+            25% {
+                border-style: dotted dotted dotted dotted;
+                border-color: transparent black black transparent;
+            }
+            50% {
+                border-style: dotted dotted dotted dotted;
+                border-color: transparent transparent black black;
+            }
+            75% {
+                border-style: dotted dotted dotted dotted;
+                border-color: black transparent transparent black;
+            }
+            100% {
+                border-style: dotted dotted dotted dotted;
+                border-color: black black transparent transparent;
+            }
+        }
+        .message a {
+            color: black;
+            text-decoration: none;
+        }
+        .message a:hover {
+            text-decoration: underline;
+        }
         .gallery img {
             width: 100%;
             height: auto;
             display: block;
             object-fit: cover;
         }
-
         @media (max-width: 768px) {
             .gallery {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
-
         @media (max-width: 480px) {
             .gallery {
                 grid-template-columns: 1fr;
@@ -46,6 +87,9 @@
 </head>
 <body>
     <div class="gallery">
+        <div class="message">
+            <a href="theresmore.html">we love you laine!!</a>
+        </div>
         <img src="gif1.gif" alt="gif 1">
         <img src="gif2.gif" alt="gif 2">
         <img src="gif3.gif" alt="gif 3">
