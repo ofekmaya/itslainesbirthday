@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday Laine!</title>
+    <title>Enter If You Dare</title>
     <style>
         * {
             margin: 0;
@@ -12,305 +12,147 @@
         }
 
         body {
-            overflow: hidden;
+            background: transparent;
             font-family: 'Courier New', monospace;
-            image-rendering: pixelated;
-            image-rendering: -moz-crisp-edges;
-            image-rendering: crisp-edges;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
         }
 
-        .sky {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            background: 
-                linear-gradient(to bottom, 
-                    #1a1a2e 0%, 
-                    #16213e 20%, 
-                    #0f3460 40%, 
-                    #533483 60%,
-                    #e94560 80%,
-                    #ff6b9d 100%);
-        }
-
-        .pixel-overlay {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.05) 2px, rgba(0,0,0,.05) 4px),
-                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,.05) 2px, rgba(0,0,0,.05) 4px);
-        }
-
-        .sun {
-            position: absolute;
-            width: 180px;
-            height: 180px;
-            background: #ff6b9d;
-            border-radius: 0;
-            bottom: 20%;
-            left: 50%;
-            transform: translateX(-50%);
-            box-shadow: 
-                0 0 0 4px #ff8fab,
-                0 0 0 8px #ffb3c1,
-                0 0 0 12px #ffd7e0;
-            clip-path: polygon(
-                0% 20%, 20% 20%, 20% 0%, 40% 0%, 40% 20%, 60% 20%, 60% 0%, 80% 0%, 80% 20%, 100% 20%,
-                100% 40%, 80% 40%, 80% 60%, 100% 60%, 100% 80%, 80% 80%, 80% 100%, 60% 100%, 60% 80%,
-                40% 80%, 40% 100%, 20% 100%, 20% 80%, 0% 80%, 0% 60%, 20% 60%, 20% 40%, 0% 40%
-            );
-        }
-
-        .cloud {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 0;
-            animation: float linear infinite;
-        }
-
-        .cloud1 {
-            width: 80px;
-            height: 24px;
-            top: 20%;
-            left: -100px;
-            animation-duration: 25s;
-            box-shadow: 
-                16px -8px 0 0 rgba(255, 255, 255, 0.9),
-                32px -8px 0 0 rgba(255, 255, 255, 0.9),
-                48px 0 0 0 rgba(255, 255, 255, 0.9);
-        }
-
-        .cloud2 {
-            width: 64px;
-            height: 24px;
-            top: 35%;
-            left: -120px;
-            animation-duration: 30s;
-            animation-delay: 5s;
-            box-shadow: 
-                16px -8px 0 0 rgba(255, 255, 255, 0.9),
-                32px 0 0 0 rgba(255, 255, 255, 0.9);
-        }
-
-        .cloud3 {
-            width: 72px;
-            height: 24px;
-            top: 50%;
-            left: -90px;
-            animation-duration: 35s;
-            animation-delay: 10s;
-            box-shadow: 
-                24px -8px 0 0 rgba(255, 255, 255, 0.9),
-                40px -8px 0 0 rgba(255, 255, 255, 0.9);
-        }
-
-        @keyframes float {
-            0% { left: -150px; }
-            100% { left: 110%; }
-        }
-
-        .pill {
-            position: absolute;
-            width: 140px;
-            height: 70px;
-            bottom: 50%;
-            left: 50%;
-            transform: translate(-50%, 50%);
-            opacity: 0;
-            animation: pillAppear 0.5s ease-out 0.5s forwards, shake 0.15s ease-in-out 1s 10;
-        }
-
-        .pill-left {
-            position: absolute;
-            left: 0;
-            width: 70px;
-            height: 70px;
-            background: #ff1493;
-            border-radius: 35px 0 0 35px;
-            box-shadow: inset -4px 0 0 0 rgba(0,0,0,0.2);
-        }
-
-        .pill-right {
-            position: absolute;
-            right: 0;
-            width: 70px;
-            height: 70px;
-            background: #4169e1;
-            border-radius: 0 35px 35px 0;
-            box-shadow: inset 4px 0 0 0 rgba(255,255,255,0.3);
-        }
-
-        @keyframes pillAppear {
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translate(-50%, 50%) rotate(0deg); }
-            25% { transform: translate(-52%, 50%) rotate(-3deg); }
-            75% { transform: translate(-48%, 50%) rotate(3deg); }
-        }
-
-        .text-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+        .typewriter {
+            font-size: clamp(1.5rem, 5vw, 3rem);
+            color: #000;
+            margin-bottom: 3rem;
             text-align: center;
-            width: 90%;
-            max-width: 800px;
+            overflow: hidden;
         }
 
-        .text-line {
-            font-size: 48px;
-            font-weight: bold;
-            letter-spacing: 8px;
-            margin: 0;
-            line-height: 1.4;
-        }
-
-        .wispy-text {
+        .typewriter-text {
             display: inline-block;
-            opacity: 0;
-            color: #ff69b4;
-            text-shadow: 
-                2px 2px 0 #ff1493,
-                4px 4px 0 #c71585,
-                6px 6px 0 #8b008b,
-                8px 8px 0 rgba(0,0,0,0.3);
-            animation: wispsRise 2s ease-out forwards, shimmer 3s ease-in-out infinite;
-            filter: blur(0);
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 3px solid #000;
+            animation: blink 0.75s step-end infinite;
         }
 
-        @keyframes wispsRise {
-            0% {
-                opacity: 0;
-                transform: translateY(30px) scale(0.8);
-                filter: blur(4px);
-            }
-            50% {
-                opacity: 0.5;
-                filter: blur(2px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-                filter: blur(0);
-            }
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
         }
 
-        @keyframes shimmer {
-            0%, 100% {
-                text-shadow: 
-                    2px 2px 0 #ff1493,
-                    4px 4px 0 #c71585,
-                    6px 6px 0 #8b008b,
-                    8px 8px 0 rgba(0,0,0,0.3);
-            }
-            50% {
-                text-shadow: 
-                    2px 2px 0 #ff69b4,
-                    4px 4px 0 #ff1493,
-                    6px 6px 0 #c71585,
-                    8px 8px 8px rgba(139,0,139,0.5);
-            }
+        @keyframes blink {
+            from, to { border-color: transparent; }
+            50% { border-color: #000; }
         }
 
-        .wispy-text:nth-child(1) { animation-delay: 2.5s, 4.5s; }
-        .wispy-text:nth-child(2) { animation-delay: 2.7s, 4.7s; }
-        .wispy-text:nth-child(3) { animation-delay: 2.9s, 4.9s; }
-        .wispy-text:nth-child(4) { animation-delay: 3.1s, 5.1s; }
-        .wispy-text:nth-child(5) { animation-delay: 3.3s, 5.3s; }
-        .wispy-text:nth-child(6) { animation-delay: 3.5s, 5.5s; }
-        .wispy-text:nth-child(7) { animation-delay: 3.7s, 5.7s; }
-        .wispy-text:nth-child(8) { animation-delay: 3.9s, 5.9s; }
-        .wispy-text:nth-child(9) { animation-delay: 4.1s, 6.1s; }
-        .wispy-text:nth-child(10) { animation-delay: 4.3s, 6.3s; }
-        .wispy-text:nth-child(11) { animation-delay: 4.5s, 6.5s; }
-        .wispy-text:nth-child(12) { animation-delay: 4.7s, 6.7s; }
-        .wispy-text:nth-child(13) { animation-delay: 4.9s, 6.9s; }
-        .wispy-text:nth-child(14) { animation-delay: 5.1s, 7.1s; }
-        .wispy-text:nth-child(15) { animation-delay: 5.3s, 7.3s; }
-        .wispy-text:nth-child(16) { animation-delay: 5.5s, 7.5s; }
-        .wispy-text:nth-child(17) { animation-delay: 5.7s, 7.7s; }
-        .wispy-text:nth-child(18) { animation-delay: 5.9s, 7.9s; }
-        .wispy-text:nth-child(19) { animation-delay: 6.1s, 8.1s; }
-        .wispy-text:nth-child(20) { animation-delay: 6.3s, 8.3s; }
-        .wispy-text:nth-child(21) { animation-delay: 6.5s, 8.5s; }
-
-        .star {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: white;
-            animation: twinkle 2s ease-in-out infinite;
+        .door-container {
+            perspective: 1000px;
+            width: clamp(200px, 50vw, 400px);
+            height: clamp(300px, 60vh, 600px);
+            position: relative;
         }
 
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
-        }
-
-        .scanlines {
-            position: fixed;
-            top: 0;
-            left: 0;
+        .door {
             width: 100%;
             height: 100%;
-            background: repeating-linear-gradient(
-                0deg,
-                rgba(0, 0, 0, 0.15),
-                rgba(0, 0, 0, 0.15) 1px,
-                transparent 1px,
-                transparent 3px
-            );
-            pointer-events: none;
-            z-index: 1000;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s ease;
+            cursor: pointer;
         }
 
+        .door:hover {
+            transform: rotateY(-15deg);
+        }
+
+        .door-front {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #4a3020, #2a1810);
+            border: 8px solid #1a0a00;
+            border-radius: 10px;
+            backface-visibility: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .door-front::before {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            right: 10%;
+            bottom: 10%;
+            border: 3px solid #6b4423;
+            border-radius: 5px;
+        }
+
+        .door-knob {
+            position: absolute;
+            right: 15%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #d4af37, #8b7500);
+            border-radius: 50%;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .door-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            transform: rotateY(180deg);
+            backface-visibility: hidden;
+        }
+
+        @media (max-width: 768px) {
+            .door-container {
+                width: 70vw;
+                height: 50vh;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="sky">
-        <div class="sun"></div>
-        <div class="pixel-overlay"></div>
-        <div class="cloud cloud1"></div>
-        <div class="cloud cloud2"></div>
-        <div class="cloud cloud3"></div>
-        <div id="stars"></div>
+    <div class="typewriter">
+        <span class="typewriter-text"></span>
     </div>
     
-    <div class="pill">
-        <div class="pill-left"></div>
-        <div class="pill-right"></div>
-    </div>
-    
-    <div class="text-container">
-        <div class="text-line">
-            <span class="wispy-text">H</span><span class="wispy-text">A</span><span class="wispy-text">P</span><span class="wispy-text">P</span><span class="wispy-text">Y</span>
+    <a href="tada.html" style="text-decoration: none;">
+        <div class="door-container">
+            <div class="door">
+                <div class="door-front">
+                    <div class="door-knob"></div>
+                </div>
+                <div class="door-back"></div>
+            </div>
         </div>
-        <div class="text-line">
-            <span class="wispy-text">B</span><span class="wispy-text">I</span><span class="wispy-text">R</span><span class="wispy-text">T</span><span class="wispy-text">H</span><span class="wispy-text">D</span><span class="wispy-text">A</span><span class="wispy-text">Y</span>
-        </div>
-        <div class="text-line">
-            <span class="wispy-text">L</span><span class="wispy-text">A</span><span class="wispy-text">I</span><span class="wispy-text">N</span><span class="wispy-text">E</span><span class="wispy-text">!</span>
-        </div>
-    </div>
-
-    <div class="scanlines"></div>
+    </a>
 
     <script>
-        const starsContainer = document.getElementById('stars');
-        for (let i = 0; i < 60; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            star.style.left = Math.random() * 100 + '%';
-            star.style.top = Math.random() * 60 + '%';
-            star.style.animationDelay = Math.random() * 2 + 's';
-            starsContainer.appendChild(star);
+        const text = "welcome. enter...if you dare...";
+        const typewriterElement = document.querySelector('.typewriter-text');
+        let i = 0;
+
+        function typeWriter() {
+            if (i < text.length) {
+                typewriterElement.textContent += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 100);
+            } else {
+                setTimeout(() => {
+                    typewriterElement.style.borderRight = 'none';
+                }, 500);
+            }
         }
+
+        typeWriter();
     </script>
 </body>
 </html>
