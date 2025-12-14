@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: transparent;
+            padding: 20px;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+        }
+
+        @media (max-width: 768px) {
+            .gallery {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="gallery">
+        <!-- Replace these src paths with your actual gif file paths -->
+        <img src="gif1.gif" alt="gif 1">
+        <img src="gif2.gif" alt="gif 2">
+        <img src="gif3.gif" alt="gif 3">
+        <img src="gif4.gif" alt="gif 4">
+        <img src="gif5.gif" alt="gif 5">
+        <img src="gif6.gif" alt="gif 6">
+        <img src="gif7.gif" alt="gif 7">
+        <img src="gif8.gif" alt="gif 8">
+        <img src="gif9.gif" alt="gif 9">
+        <!-- Add more images as needed -->
+    </div>
+</body>
+</html>
