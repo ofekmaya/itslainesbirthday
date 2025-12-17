@@ -12,16 +12,19 @@
         }
         body {
             background: transparent;
-            padding: 20px;
-            min-height: 100vh;
-            overflow-x: hidden;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: fixed;
         }
         .gallery {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            max-width: 1200px;
-            margin: 0 auto;
+            grid-template-rows: repeat(4, 1fr);
+            gap: 8px;
+            width: 100vw;
+            height: 100vh;
+            padding: 10px;
             position: relative;
         }
         .message {
@@ -38,9 +41,9 @@
             border: 4px dotted black;
             border-radius: 10px;
             z-index: 10;
-            animation: rotateBorder 2s linear infinite;
             max-width: 90vw;
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            animation: rotateBorder 2s linear infinite, pulse 1.5s ease-in-out infinite;
         }
         @keyframes rotateBorder {
             0% {
@@ -64,6 +67,14 @@
                 border-color: black black transparent transparent;
             }
         }
+        @keyframes pulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.05);
+            }
+        }
         .message a {
             color: black;
             text-decoration: none;
@@ -73,70 +84,53 @@
         .message a:hover,
         .message a:active {
             text-decoration: underline;
-            transform: scale(1.05);
         }
         .gallery img {
             width: 100%;
-            height: auto;
+            height: 100%;
             display: block;
             object-fit: cover;
             border-radius: 5px;
-            aspect-ratio: 1;
         }
         
-        /* Tablet */
-        @media (max-width: 768px) {
-            body {
-                padding: 15px;
-            }
+        /* Mobile portrait - fit 13 images in 4x4 grid (3 empty spots) */
+        @media (max-width: 768px) and (orientation: portrait) {
             .gallery {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 8px;
-            }
-            .message {
-                font-size: 1.5rem;
-                padding: 20px 30px;
-                border-width: 3px;
-            }
-        }
-        
-        /* Mobile */
-        @media (max-width: 480px) {
-            body {
-                padding: 10px;
-            }
-            .gallery {
-                grid-template-columns: 1fr;
-                gap: 10px;
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-rows: repeat(4, 1fr);
+                gap: 5px;
+                padding: 8px;
             }
             .message {
                 font-size: 1.3rem;
-                padding: 18px 25px;
-                border-width: 3px;
-                max-width: 85vw;
-            }
-        }
-        
-        /* Small mobile */
-        @media (max-width: 360px) {
-            .message {
-                font-size: 1.2rem;
                 padding: 15px 20px;
             }
         }
         
-        /* Landscape mobile */
-        @media (max-height: 500px) and (orientation: landscape) {
-            body {
-                padding: 10px;
-            }
+        /* Mobile landscape */
+        @media (max-width: 768px) and (orientation: landscape) {
             .gallery {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 8px;
+                grid-template-columns: repeat(4, 1fr);
+                grid-template-rows: repeat(3, 1fr);
+                gap: 5px;
+                padding: 5px;
             }
             .message {
                 font-size: 1.2rem;
-                padding: 15px 20px;
+                padding: 12px 18px;
+            }
+        }
+        
+        /* Very small mobile */
+        @media (max-width: 480px) {
+            .gallery {
+                gap: 4px;
+                padding: 5px;
+            }
+            .message {
+                font-size: 1.1rem;
+                padding: 12px 16px;
+                border-width: 3px;
             }
         }
     </style>
@@ -157,8 +151,6 @@
         <img src="gif10.gif" alt="gif 10">
         <img src="gif11.gif" alt="gif 11">
         <img src="gif12.gif" alt="gif 12">
-        <img src="gif13.gif" alt="gif 13">
-        <img src="gif14.gif" alt="gif 14">
     </div>
 </body>
 </html>
