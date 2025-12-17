@@ -134,8 +134,24 @@
                 // Calculate image number based on the actual cube index
                 const imageNum = cubeIndex * 6 + index + 1;
                 
-                // Simple image loading without nested callbacks
-                faceDiv.style.backgroundImage = `url('image${imageNum}.jpg')`;
+                // Try loading both .jpg and .jpeg extensions
+                const img = new Image();
+                img.onload = function() {
+                    faceDiv.style.backgroundImage = `url('image${imageNum}.jpg')`;
+                };
+                img.onerror = function() {
+                    // Try .jpeg if .jpg fails
+                    const imgJpeg = new Image();
+                    imgJpeg.onload = function() {
+                        faceDiv.style.backgroundImage = `url('image${imageNum}.jpeg')`;
+                    };
+                    imgJpeg.onerror = function() {
+                        // If both fail, try without extension (let browser decide)
+                        faceDiv.style.backgroundImage = `url('image${imageNum}')`;
+                    };
+                    imgJpeg.src = `image${imageNum}.jpeg`;
+                };
+                img.src = `image${imageNum}.jpg`;
                 
                 cube.appendChild(faceDiv);
             });
