@@ -24,17 +24,19 @@
         }
 
         .typewriter {
-            font-size: clamp(1.2rem, 4vw, 3rem);
+            font-size: clamp(1rem, 4vw, 3rem);
             color: #000;
             margin-bottom: 2rem;
             text-align: center;
             width: 100%;
             max-width: 90vw;
+            line-height: 1.3;
         }
 
         .typewriter-text {
             display: inline-block;
-            white-space: nowrap;
+            white-space: pre-wrap;
+            word-break: break-word;
             overflow: hidden;
             border-right: 3px solid #000;
             animation: blink 0.75s step-end infinite;
@@ -131,13 +133,14 @@
             }
 
             .typewriter {
-                margin-bottom: 1.5rem;
+                font-size: 1.1rem;
+                margin-bottom: 1.2rem;
             }
 
             .door-container {
-                width: 90vw;
-                height: 60vh;
-                max-height: 500px;
+                width: 85vw;
+                height: 55vh;
+                max-height: 450px;
             }
 
             .door-front {
@@ -151,12 +154,13 @@
 
         @media (max-width: 480px) {
             .typewriter {
-                font-size: 1.3rem;
+                font-size: 1rem;
+                margin-bottom: 1rem;
             }
 
             .door-container {
                 width: 85vw;
-                height: 55vh;
+                height: 50vh;
             }
 
             .door-front {
