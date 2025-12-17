@@ -88,6 +88,17 @@
         .message a:active {
             text-decoration: underline;
         }
+        .click-hint {
+            font-size: clamp(0.7rem, 2vw, 0.9rem);
+            margin-top: 8px;
+            color: #333;
+            font-style: italic;
+        }
+        .arrows {
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            margin-bottom: 3px;
+            letter-spacing: 2px;
+        }
         .gallery img {
             width: 100%;
             height: 100%;
@@ -153,7 +164,13 @@
 <body>
     <div class="gallery">
         <div class="message">
-            <a href="theresmore.html">we love you laine!!</a>
+            <a href="theresmore.html">
+                we love you laine!!
+                <div class="click-hint">
+                    <div class="arrows">↑ ↑ ↑</div>
+                    psst...click here for something extra ;)
+                </div>
+            </a>
         </div>
         <img src="gif1.gif" alt="gif 1">
         <img src="gif2.gif" alt="gif 2">
@@ -166,6 +183,7 @@
         <img src="gif10.gif" alt="gif 10">
         <img src="gif11.gif" alt="gif 11">
         <img src="gif12.gif" alt="gif 12">
+        <img src="gif13.gif" alt="gif 13">
     </div>
 </body>
 </html>
