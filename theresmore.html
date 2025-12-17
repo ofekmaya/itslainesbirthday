@@ -92,15 +92,33 @@
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 769;
         
         // Adjust number of cubes based on device
+        const totalCubes = 29;
         const numCubes = isMobile ? 10 : 29; // Reduce from 29 to 10 on mobile
         const cubeSize = isMobile ? 100 : 150;
+        
+        // Generate random cube indices for mobile
+        let cubeIndices = [];
+        if (isMobile) {
+            // Create array of all possible indices [0-28]
+            const allIndices = Array.from({length: totalCubes}, (_, i) => i);
+            // Shuffle and take first 10
+            for (let i = allIndices.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [allIndices[i], allIndices[j]] = [allIndices[j], allIndices[i]];
+            }
+            cubeIndices = allIndices.slice(0, numCubes);
+        } else {
+            // Use all cubes on desktop
+            cubeIndices = Array.from({length: totalCubes}, (_, i) => i);
+        }
         
         // Array to store cube objects
         const cubes = [];
         let animationFrameId;
         
         // Create cubes
-        for (let i = 0; i < numCubes; i++) {
+        for (let i = 0; i < cubeIndices.length; i++) {
+            const cubeIndex = cubeIndices[i];
             const container = document.createElement('div');
             container.className = 'cube-container';
             
@@ -113,8 +131,8 @@
                 const faceDiv = document.createElement('div');
                 faceDiv.className = `cube-face ${face}`;
                 
-                // Calculate image number
-                const imageNum = i * 6 + index + 1;
+                // Calculate image number based on the actual cube index
+                const imageNum = cubeIndex * 6 + index + 1;
                 
                 // Simple image loading without nested callbacks
                 faceDiv.style.backgroundImage = `url('image${imageNum}.jpg')`;
