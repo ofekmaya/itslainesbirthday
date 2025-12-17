@@ -15,6 +15,7 @@
             overflow: hidden;
             width: 100vw;
             height: 100vh;
+            position: fixed;
         }
         .center-text {
             position: fixed;
@@ -22,17 +23,20 @@
             left: 50%;
             transform: translate(-50%, -50%);
             font-family: 'Times New Roman', Times, serif;
-            font-size: 48px;
+            font-size: clamp(1.5rem, 5vw, 3rem);
             color: black;
             text-shadow: -2px -2px 0 white, 2px -2px 0 white, -2px 2px 0 white, 2px 2px 0 white;
             z-index: 1000;
             pointer-events: none;
             font-weight: bold;
+            text-align: center;
+            padding: 0 20px;
+            max-width: 90vw;
         }
         .cube-container {
             position: absolute;
-            width: 150px;
-            height: 150px;
+            width: 100px;
+            height: 100px;
             perspective: 1000px;
         }
         .cube {
@@ -48,29 +52,54 @@
         }
         .cube-face {
             position: absolute;
-            width: 150px;
-            height: 150px;
+            width: 100px;
+            height: 100px;
             background-size: cover;
             background-position: center;
             border: 2px solid white;
             box-shadow: 0 0 20px rgba(0,0,0,0.3);
         }
-        .front  { transform: rotateY(0deg) translateZ(75px); }
-        .back   { transform: rotateY(180deg) translateZ(75px); }
-        .right  { transform: rotateY(90deg) translateZ(75px); }
-        .left   { transform: rotateY(-90deg) translateZ(75px); }
-        .top    { transform: rotateX(90deg) translateZ(75px); }
-        .bottom { transform: rotateX(-90deg) translateZ(75px); }
+        .front  { transform: rotateY(0deg) translateZ(50px); }
+        .back   { transform: rotateY(180deg) translateZ(50px); }
+        .right  { transform: rotateY(90deg) translateZ(50px); }
+        .left   { transform: rotateY(-90deg) translateZ(50px); }
+        .top    { transform: rotateX(90deg) translateZ(50px); }
+        .bottom { transform: rotateX(-90deg) translateZ(50px); }
+
+        /* Desktop styles */
+        @media (min-width: 769px) {
+            .cube-container {
+                width: 150px;
+                height: 150px;
+            }
+            .cube-face {
+                width: 150px;
+                height: 150px;
+            }
+            .front  { transform: rotateY(0deg) translateZ(75px); }
+            .back   { transform: rotateY(180deg) translateZ(75px); }
+            .right  { transform: rotateY(90deg) translateZ(75px); }
+            .left   { transform: rotateY(-90deg) translateZ(75px); }
+            .top    { transform: rotateX(90deg) translateZ(75px); }
+            .bottom { transform: rotateX(-90deg) translateZ(75px); }
+        }
     </style>
 </head>
 <body>
     <div class="center-text">"a big part of my life"</div>
     <script>
-        // Array to store cube objects with their positions and velocities
-        const cubes = [];
-        const numCubes = 29; // 174 images / 6 faces per cube = 29 cubes
+        // Detect if mobile device
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 769;
         
-        // Create 8 cubes
+        // Adjust number of cubes based on device
+        const numCubes = isMobile ? 10 : 29; // Reduce from 29 to 10 on mobile
+        const cubeSize = isMobile ? 100 : 150;
+        
+        // Array to store cube objects
+        const cubes = [];
+        let animationFrameId;
+        
+        // Create cubes
         for (let i = 0; i < numCubes; i++) {
             const container = document.createElement('div');
             container.className = 'cube-container';
@@ -83,18 +112,12 @@
             faces.forEach((face, index) => {
                 const faceDiv = document.createElement('div');
                 faceDiv.className = `cube-face ${face}`;
-                // Set image for each face (6 images per cube)
+                
+                // Calculate image number
                 const imageNum = i * 6 + index + 1;
                 
-                // Try loading .jpg first, fallback to .jpeg
-                const img = new Image();
-                img.onload = () => {
-                    faceDiv.style.backgroundImage = `url('image${imageNum}.jpg')`;
-                };
-                img.onerror = () => {
-                    faceDiv.style.backgroundImage = `url('image${imageNum}.jpeg')`;
-                };
-                img.src = `image${imageNum}.jpg`;
+                // Simple image loading without nested callbacks
+                faceDiv.style.backgroundImage = `url('image${imageNum}.jpg')`;
                 
                 cube.appendChild(faceDiv);
             });
@@ -105,39 +128,73 @@
             // Initialize position and velocity
             cubes.push({
                 element: container,
-                x: Math.random() * (window.innerWidth - 150),
-                y: Math.random() * (window.innerHeight - 150),
-                vx: (Math.random() - 0.5) * 4,
-                vy: (Math.random() - 0.5) * 4
+                x: Math.random() * (window.innerWidth - cubeSize),
+                y: Math.random() * (window.innerHeight - cubeSize),
+                vx: (Math.random() - 0.5) * (isMobile ? 2 : 4), // Slower on mobile
+                vy: (Math.random() - 0.5) * (isMobile ? 2 : 4)
             });
         }
+        
+        // Track last update time for throttling
+        let lastUpdate = Date.now();
+        const updateInterval = isMobile ? 32 : 16; // ~30fps on mobile, ~60fps on desktop
         
         // Animation loop
         function animate() {
-            cubes.forEach(cube => {
-                // Update position
-                cube.x += cube.vx;
-                cube.y += cube.vy;
-                
-                // Bounce off walls
-                if (cube.x <= 0 || cube.x >= window.innerWidth - 150) {
-                    cube.vx *= -1;
-                    cube.x = Math.max(0, Math.min(cube.x, window.innerWidth - 150));
-                }
-                if (cube.y <= 0 || cube.y >= window.innerHeight - 150) {
-                    cube.vy *= -1;
-                    cube.y = Math.max(0, Math.min(cube.y, window.innerHeight - 150));
-                }
-                
-                // Apply position
-                cube.element.style.left = cube.x + 'px';
-                cube.element.style.top = cube.y + 'px';
-            });
+            const now = Date.now();
+            const delta = now - lastUpdate;
             
-            requestAnimationFrame(animate);
+            // Throttle updates on mobile
+            if (delta >= updateInterval) {
+                cubes.forEach(cube => {
+                    // Update position
+                    cube.x += cube.vx;
+                    cube.y += cube.vy;
+                    
+                    // Bounce off walls
+                    if (cube.x <= 0 || cube.x >= window.innerWidth - cubeSize) {
+                        cube.vx *= -1;
+                        cube.x = Math.max(0, Math.min(cube.x, window.innerWidth - cubeSize));
+                    }
+                    if (cube.y <= 0 || cube.y >= window.innerHeight - cubeSize) {
+                        cube.vy *= -1;
+                        cube.y = Math.max(0, Math.min(cube.y, window.innerHeight - cubeSize));
+                    }
+                    
+                    // Apply position with transform for better performance
+                    cube.element.style.transform = `translate(${cube.x}px, ${cube.y}px)`;
+                });
+                
+                lastUpdate = now;
+            }
+            
+            animationFrameId = requestAnimationFrame(animate);
         }
         
-        animate();
+        // Start animation after a brief delay to let page settle
+        setTimeout(() => {
+            animate();
+        }, 100);
+        
+        // Handle orientation changes on mobile
+        window.addEventListener('resize', () => {
+            // Cancel current animation
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+            }
+            
+            // Reposition cubes within new boundaries
+            cubes.forEach(cube => {
+                cube.x = Math.min(cube.x, window.innerWidth - cubeSize);
+                cube.y = Math.min(cube.y, window.innerHeight - cubeSize);
+                cube.element.style.transform = `translate(${cube.x}px, ${cube.y}px)`;
+            });
+            
+            // Restart animation
+            setTimeout(() => {
+                animate();
+            }, 100);
+        });
     </script>
 </body>
 </html>
