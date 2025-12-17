@@ -20,14 +20,16 @@
             align-items: center;
             min-height: 100vh;
             padding: 20px;
+            overflow-x: hidden;
         }
 
         .typewriter {
-            font-size: clamp(1.5rem, 5vw, 3rem);
+            font-size: clamp(1.2rem, 4vw, 3rem);
             color: #000;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
             text-align: center;
-            overflow: hidden;
+            width: 100%;
+            max-width: 90vw;
         }
 
         .typewriter-text {
@@ -38,11 +40,6 @@
             animation: blink 0.75s step-end infinite;
         }
 
-        @keyframes typing {
-            from { width: 0; }
-            to { width: 100%; }
-        }
-
         @keyframes blink {
             from, to { border-color: transparent; }
             50% { border-color: #000; }
@@ -50,9 +47,10 @@
 
         .door-container {
             perspective: 1000px;
-            width: clamp(200px, 50vw, 400px);
-            height: clamp(300px, 60vh, 600px);
+            width: min(400px, 85vw);
+            height: min(600px, 65vh);
             position: relative;
+            touch-action: manipulation;
         }
 
         .door {
@@ -64,7 +62,8 @@
             cursor: pointer;
         }
 
-        .door:hover {
+        .door:hover,
+        .door:active {
             transform: rotateY(-15deg);
         }
 
@@ -95,8 +94,8 @@
             right: 15%;
             top: 50%;
             transform: translateY(-50%);
-            width: 20px;
-            height: 20px;
+            width: clamp(15px, 3vw, 20px);
+            height: clamp(15px, 3vw, 20px);
             background: radial-gradient(circle, #d4af37, #8b7500);
             border-radius: 50%;
             box-shadow: inset 0 2px 5px rgba(0,0,0,0.3);
@@ -111,10 +110,84 @@
             backface-visibility: hidden;
         }
 
+        .tap-instruction {
+            margin-top: 1.5rem;
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            color: #333;
+            text-align: center;
+            opacity: 0;
+            animation: fadeIn 1s ease-in 2s forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Mobile-specific optimizations */
         @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+
+            .typewriter {
+                margin-bottom: 1.5rem;
+            }
+
             .door-container {
-                width: 70vw;
-                height: 50vh;
+                width: 90vw;
+                height: 60vh;
+                max-height: 500px;
+            }
+
+            .door-front {
+                border-width: 6px;
+            }
+
+            .tap-instruction {
+                margin-top: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .typewriter {
+                font-size: 1.3rem;
+            }
+
+            .door-container {
+                width: 85vw;
+                height: 55vh;
+            }
+
+            .door-front {
+                border-width: 5px;
+            }
+
+            .door-front::before {
+                border-width: 2px;
+            }
+        }
+
+        /* Landscape mobile optimization */
+        @media (max-height: 500px) and (orientation: landscape) {
+            body {
+                padding: 10px;
+            }
+
+            .typewriter {
+                font-size: 1.2rem;
+                margin-bottom: 1rem;
+            }
+
+            .door-container {
+                height: 75vh;
+                width: auto;
+                aspect-ratio: 2/3;
+            }
+
+            .tap-instruction {
+                margin-top: 0.5rem;
+                font-size: 0.85rem;
             }
         }
     </style>
@@ -135,6 +208,8 @@
         </div>
     </a>
 
+    <p class="tap-instruction">Tap the door to enter...</p>
+
     <script>
         const text = "welcome. enter...if you dare...";
         const typewriterElement = document.querySelector('.typewriter-text');
@@ -152,7 +227,20 @@
             }
         }
 
-        typeWriter();
+        // Start typing when page loads
+        window.addEventListener('load', typeWriter);
+
+        // Add touch feedback for mobile
+        const door = document.querySelector('.door');
+        door.addEventListener('touchstart', function() {
+            this.style.transform = 'rotateY(-15deg)';
+        });
+
+        door.addEventListener('touchend', function() {
+            setTimeout(() => {
+                this.style.transform = 'rotateY(0deg)';
+            }, 300);
+        });
     </script>
 </body>
 </html>
